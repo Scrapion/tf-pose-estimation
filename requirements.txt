@@ -1,5 +1,6 @@
 dill
 fire
+gast==0.3.2
 matplotlib
 numba
 psutil
