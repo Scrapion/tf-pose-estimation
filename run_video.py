@@ -1,12 +1,21 @@
 import argparse
 import logging
 import time
-
+from google.colab.patches import cv2_imshow
 import cv2
 import numpy as np
 
+from IPython.display import clear_output, display
+from PIL import Image
+import base64
+
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path, model_wh
+
+def arrayShow (imageArray):
+    ret, png = cv2.imencode('.png', imageArray)
+    encoded = base64.b64encode(png)
+    return Image(data=encoded.decode('ascii'))
 
 logger = logging.getLogger('TfPoseEstimator-Video')
 logger.setLevel(logging.DEBUG)
@@ -33,7 +42,7 @@ if __name__ == '__main__':
     w, h = model_wh(args.resolution)
     e = TfPoseEstimator(get_graph_path(args.model), target_size=(w, h))
     cap = cv2.VideoCapture(args.video)
-
+    f_index=0
     if cap.isOpened() is False:
         print("Error opening video stream or file")
     while cap.isOpened():
@@ -45,8 +54,15 @@ if __name__ == '__main__':
         image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
 
         cv2.putText(image, "FPS: %f" % (1.0 / (time.time() - fps_time)), (10, 10),  cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-        cv2.imshow('tf-pose-estimation result', image)
+        cv2.imwrite('frame.jpg', image)
+        print('Frame index: ',f_index+1)
+        #cv2_imshow(image)
+        f_index+=1
         fps_time = time.time()
+
+        img_frame=cv2.imread('/content/tf-pose-estimation/frame.jpg')
+        cv2_imshow(img_frame)
+        
         if cv2.waitKey(1) == 27:
             break
 
