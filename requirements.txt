@@ -10,5 +10,6 @@ scikit-image
 scipy
 slidingwindow
 tqdm
-git+https://github.com/adrianc-a/tf-slim.git@remove_contrib
+git+https://github.com/Scrapion/tf-slim.git@remove_contrib
+#git+https://github.com/adrianc-a/tf-slim.git@remove_contrib
 git+https://github.com/ppwwyyxx/tensorpack.git
